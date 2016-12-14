@@ -1,0 +1,5 @@
+/* 重置标签的默认样式以及消除标签在不同浏览器的差异 -- CSSReset ; 设置部分标签默认值 */
+body{margin:0;background-color:#fcf6ea;}
+/* <canvas>画布模块 */
+div .m-canvas{position:absolute;left:50%;-webkit-transform:translateX(-50%);/*Chrome,safari*/-ms-transform:translateX(-50%);/*IE9*/transform:translateX(-50%);margin-top:10px;}
+
