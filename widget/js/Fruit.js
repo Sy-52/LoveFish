@@ -1,12 +1,12 @@
 define(['Variate'],function(Variate){
 	/* 果实模块 */
 	function Fruit(){
-		/* 果实的海葵、图像、类型、成长和上升的速度(静态) */
+		/* 果实成长的海葵；果实的图像、类型；上升速度 */
 		this.ane = Variate.ane[Math.floor(Math.random()*50)];
 		this.img = new Image();
 		this.type = Math.random();	
 		this.spd = Math.random() * 0.017 + 0.003;  
-		/* 果实的状态、体积、上升位置(动态) */
+		/* 果实的体积、生命体征、上升位置 */
 		this.volume = 0;
 		this.alive = true;
 		this.lastLoc = 0;
@@ -36,7 +36,6 @@ define(['Variate'],function(Variate){
 			}
 		}
 	}
-
 	return Fruit;
 });
 

@@ -13,6 +13,8 @@ define(function(){
 	/* 鼠标位置 */
 	var mouseX = 400,mouseY = 300;
 	return {
+		canvas1:canvas1,
+		canvas2:canvas2,
 		ctx1:ctx1,
 		ctx2:ctx2,
 		ane:ane,

@@ -18,17 +18,22 @@ require(['Variate','Tools','Anemone','Fruit','Dust','BigFish','SmallFish','Halo'
 		Variate.canvas2 = document.getElementsByTagName('canvas')[1];
 		Variate.ctx1 = Variate.canvas1.getContext('2d');	
 		Variate.ctx2 = Variate.canvas2.getContext('2d');
+		/* 给上面的<canvas>对象绑定mousemove事件句柄 */
 		Tools.addEvent(Variate.canvas2,'mousemove',onmousemove);
 		/* 海葵初始化 */
 		for(var i = 0 ; i < 50 ; i++){
 			var x = i*16 + Math.random()*20;
-			var height = 200 + Math.random()*50;
-			Variate.ane[i] = new Anemone(x,height);
+			Variate.ane[i] = new Anemone(x);
 		}
 		/* 果实初始化 */
 		for(i = 0 ; i<30 ; i++){
 			/* 每一个果实在50棵海葵中随机找一颗生长 */
 			Variate.fruit[i] = new Fruit();
+		}
+		/* 漂浮物初始化 */
+		for(i = 0 ; i<30 ; i++){
+			Variate.dust[i] = new Dust();
+			Variate.dust[i].dust.src = "../widget/image/dust"+ Math.floor(Math.random()*7) +".png";
 		}
 		/* 大鱼初始化 */
 		Variate.bigFish = new BigFish();
@@ -37,12 +42,12 @@ require(['Variate','Tools','Anemone','Fruit','Dust','BigFish','SmallFish','Halo'
 		/* 波浪、光圈初始化 */
 		Variate.circle = new Halo();
 		Variate.halo = new Halo();
-		/* 漂浮物初始化 */
-		for(i = 0 ; i<30 ; i++){
-			Variate.dust[i] = new Dust();
-		}
 		/* 分数初始化 */
 		Variate.data = new Data();
+		/* 初始化"绘图环境"对象的状态 */
+		Variate.ctx1.strokeStyle = '#3b154e';
+		Variate.ctx1.lineWidth = 20;
+		Variate.ctx1.lineCap = 'round';
 	}
 
 	/* 图片预加载 */
@@ -88,7 +93,7 @@ require(['Variate','Tools','Anemone','Fruit','Dust','BigFish','SmallFish','Halo'
 
 	/* 动态绘制 */
 	function gameLoop(){
-		window.requestAnimFrame(gameLoop);	
+		window.requestAnimationFrame(gameLoop);	
 		/* 绘制背景图 */
 		drawBackgroundImage();
 		/* 绘制海葵 */
@@ -130,27 +135,27 @@ require(['Variate','Tools','Anemone','Fruit','Dust','BigFish','SmallFish','Halo'
 
 	/* 绘制果实 */
 	function drawFruit(){
-		var arrObj = Variate.fruit;
 		var data = 0;
-		/* 检测死亡果实数量 */
+		/* 检测、记录当前所有果实实例中死亡的果实数量 */
 		for(var i = 0 ; i<30 ;i++){
-			if(arrObj[i].alive == false){
+			if(Variate.fruit[i].alive == false){
 				data++;	
 			}
 		}
-		/* 若果实死亡数过半，则生成新的果实 */
+		/* 检测到死亡果实数过半，则生成一个新果实 */
 		if(data > 15){
 			for(i = 0 ; i<30 ; i++){
-				if(arrObj[i].alive == false){
-					arrObj[i] = new Fruit();
+				if(Variate.fruit[i].alive == false){
+					Variate.fruit[i] = null;
+					Variate.fruit[i] = new Fruit();
 					break;
 				}
 			}
 		}
-		/* 果实绘制 */
+		/* 绘制这波浏览器间隔时间内的所有果实 */
 		for(i = 0 ; i<30 ; i++){
-			if(arrObj[i].alive == true){
-				arrObj[i].grow();
+			if(Variate.fruit[i].alive == true){
+				Variate.fruit[i].grow();
 			}
 		}
 	}
