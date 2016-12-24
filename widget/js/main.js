@@ -18,8 +18,6 @@ require(['Variate','Tools','Anemone','Fruit','Dust','BigFish','SmallFish','Halo'
 		Variate.canvas2 = document.getElementsByTagName('canvas')[1];
 		Variate.ctx1 = Variate.canvas1.getContext('2d');	
 		Variate.ctx2 = Variate.canvas2.getContext('2d');
-		/* 给上面的<canvas>对象绑定mousemove事件句柄 */
-		Tools.addEvent(Variate.canvas2,'mousemove',onmousemove);
 		/* 海葵初始化 */
 		for(var i = 0 ; i < 50 ; i++){
 			var x = i*16 + Math.random()*20;
@@ -37,6 +35,8 @@ require(['Variate','Tools','Anemone','Fruit','Dust','BigFish','SmallFish','Halo'
 		}
 		/* 大鱼初始化 */
 		Variate.bigFish = new BigFish();
+		/* 绑定mousemove事件句柄便于大鱼取得鼠标在画布坐标 */
+		Tools.addEvent(Variate.canvas2,'mousemove',onmousemove);
 		/* 小鱼初始化 */
 		Variate.smallFish = new SmallFish();
 		/* 波浪、光圈初始化 */
@@ -168,16 +168,19 @@ require(['Variate','Tools','Anemone','Fruit','Dust','BigFish','SmallFish','Halo'
 	}
 
 	/* 获取鼠标位置 */
-	function onmousemove(ev){
+	function onmousemove(event){
 		if(!Variate.data.gameOver){
-			var e = ev || window.event;
-			if(e.offsetX){
-				Variate.mouseX = (e.offsetX == undefined) ? e.layerX : e.offsetX;
-				Variate.mouseY = (e.offsetY == undefined) ? e.layerY : e.offsetY;
-			}
+			var evt = event || window.event;
+			var srcObj = evt.target || evt.srcElement;
+			/* offsetX只在IE中适用，FF不行。下面是一种兼容方案 */
+			Variate.mouseX = (evt.offsetX == undefined) ? evt.clientX - srcObj.getBoundingClientRect().left : evt.offsetX;
+			Variate.mouseY = (evt.offsetY == undefined) ? evt.clientY - srcObj.getBoundingClientRect().top : evt.offsetY;
 		}
 	}
-	/* 果实碰撞检测 */
+	/* 
+	  大鱼、果实碰撞
+	  应该是大鱼吃掉果实就计分。因为实际操作中我不可能吃一个果实就喂一次（而且我也没限制只能吃一颗喂一颗） 
+	 */
 	function FruitsCollision(){
 		if(!Variate.data.gameOver){
 			for(var i = 0 ; i < 30 ; i++){
@@ -191,14 +194,17 @@ require(['Variate','Tools','Anemone','Fruit','Dust','BigFish','SmallFish','Halo'
 						if(Variate.bigFish.bodyCount < 7)Variate.bigFish.bodyCount += 1;
 						/* 果实不同大鱼身体颜色亦不同 */
 						Variate.bigFish.type = Variate.fruit[i].type;
+						/* 分数计算 */
+						if(Variate.fruit[i].type < 0.2){
+							Variate.data.double = 2;
+						}else{
+							Variate.data.double = 1;							
+						}
+						Variate.data.result += Variate.data.double;
 						/* 大鱼进食时显示光圈 */
 						Variate.circle.x = Variate.fruit[i].lastLoc;
 						Variate.circle.y = Variate.fruit[i].position;
 						Variate.circle.switch = true;
-						/* 分数计算 */
-						if(Variate.fruit[i].type < 0.2){
-							Variate.data.double = 2;
-						}
 					}
 				}
 			}
@@ -209,9 +215,6 @@ require(['Variate','Tools','Anemone','Fruit','Dust','BigFish','SmallFish','Halo'
 	function FishCollision(){
 		if(Math.pow(Variate.bigFish.x - Variate.smallFish.x,2) + Math.pow(Variate.bigFish.y - Variate.smallFish.y,2) < 900){
 			if(Variate.bigFish.bodyCount != 0){
-				/* 分数计算 */
-				Variate.data.result += Variate.data.double*10;
-				Variate.data.double = 1;
 				/* 将小大鱼的身体颜色恢复 */
 				Variate.bigFish.bodyCount = 0;
 				Variate.smallFish.bodyCount = 0;
