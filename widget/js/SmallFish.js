@@ -68,15 +68,7 @@ define(['Variate','Tools'],function(Variate,Tools){
 		this.y = Tools.lerpDistance(Variate.bigFish.y,this.y,0.98);
 		Variate.ctx2.translate(this.x,this.y);
 		//大鱼角度逐渐朝向与鼠标的连线
-		aimAngle = Math.atan2(Variate.bigFish.y - this.y,Variate.bigFish.x - this.x) + Math.PI;
-		delta = this.angle - aimAngle;
-		if(delta > Math.PI ){
-			delta = this.angle - aimAngle - 2*Math.PI;
-		}
-		if(delta < -0.5*Math.PI){
-			delta = this.angle - aimAngle + 2*Math.PI;			
-		}
-		this.angle = aimAngle + delta*0.6;
+		this.angle = Math.atan2(Variate.bigFish.y - this.y,Variate.bigFish.x - this.x) + Math.PI;
 		/* 左手定则 */
 		Variate.ctx2.rotate(this.angle);
 		/* 绘制小鱼 */

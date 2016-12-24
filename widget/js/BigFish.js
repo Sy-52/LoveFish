@@ -26,20 +26,20 @@ define(['Variate','Tools'],function(Variate,Tools){
 	BigFish.prototype.draw = function(){
 		/* 大鱼本身动态效果(身体、眼睛、尾巴) */
 		var deltaTime = Math.random()*3 + 15;
-		/* 身体变白 */
+		/* 计算身体图片顺序 */
 		if(this.type < 0.2){
 			this.body.src = '../widget/image/bigSwimBlue'+ this.bodyCount +'.png';
 		}else{
 			this.body.src = '../widget/image/bigSwim'+ this.bodyCount +'.png';		
 		}
-		/* 尾巴摆动 */
+		/* 计算尾巴图片顺序 */
 		this.tail.src = '../widget/image/bigTail' + this.tailCount + '.png';
 		this.tailTimer += deltaTime;
 		if(this.tailTimer > 50){
 			this.tailCount = (this.tailCount + 1) % 8;
 			this.tailTimer = 0;
 		}
-		/* 眼睛眨动 */
+		/* 计算眼睛图片顺序 */
 		this.eye.src = '../widget/image/bigEye'+ this.eyeCount +'.png';
 		if(this.eyeCount == 0){
 			if(this.eyeTimer < this.interval){
@@ -65,7 +65,7 @@ define(['Variate','Tools'],function(Variate,Tools){
 		/* 将大鱼位置设置为画布中心，便于旋转 */
 		Variate.ctx2.translate(this.x,this.y);
 		/* 旋转canvas2画布 */
-		this.angle = Math.atan2(Variate.mouseY - this.y,Variate.mouseX - this.x) - Math.PI;
+		this.angle = Math.atan2(Variate.mouseY - this.y,Variate.mouseX - this.x) + Math.PI;
 		/* 左手定则 */
 		Variate.ctx2.rotate(this.angle);
 		/* 在画布正中心绘制大鱼 */
