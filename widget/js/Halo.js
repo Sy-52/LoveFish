@@ -23,7 +23,6 @@ define(['Variate'],function(Variate){
 			Variate.ctx2.strokeStyle = "rgba("+ color + "," + this.alpha +")";
 			Variate.ctx2.arc(this.x,this.y,this.r,0,Math.PI*2);
 			Variate.ctx2.stroke();
-			Variate.ctx2.closePath();
 			Variate.ctx2.restore();
 		}
 	}

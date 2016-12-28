@@ -15,7 +15,7 @@ define(['Variate','Tools'],function(Variate,Tools){
 		this.eyeCount = 0;
 		/* 身体颜色图片 */
 		this.bodyCount = 0;
-		/*  */
+		/* 画布旋转角度与鱼的身体颜色 */
 		this.angle = 0;
 		this.type = 0;
 	}
